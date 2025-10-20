@@ -40,6 +40,10 @@ class Package {
             return pickupCode;
         }
 
+        std::string getDeliveryTime() const {
+            return deliveryTime;
+        }
+
         std::string getNote() const {
             return note;
         }

@@ -7,7 +7,7 @@ class PackageList {
     public:
         PackageList() = default;
         //Push and pop functions
-        void pushPackage(const Package& package);
+        void pushPackage();
         void pop_backPackage();
         void pop_frontPackage();
         void removePackageByTrackingNumber(const std::string& trackingNumber);
@@ -16,14 +16,12 @@ class PackageList {
         Package* FindByPickUpCode(const std::string& pickupCode);
         Package* FindByTrackingNumber(const std::string& trackingNumber);
         Package* FindByMember(const Member& member , bool SenderOrReceiver , int index);
-        Package* FindByMemberName(const std::string& name , bool SenderOrReceiver);
-        Package* FindByMemberPhone(const std::string& phone , bool SenderOrReceiver);
         Package* FindByDate(const std::string& date);
-        Package* FindByStatus(const std::string& status);
         // true for sender, false for receiver & index==1 -> name ; ==2 -> phone ; ==3 -> address
         //Sort functions
         void SortByStatus();
         //Display function
+        void DisplayPackageDetails(const Package& package) const;
         void DisplayAllPackages() const;
         //edit functions
         void EditPackageStatus(const std::string& trackingNumber, const std::string& newStatus);

@@ -70,41 +70,41 @@ commit: 陈俊亦202483290008
 commit：陈俊亦202483290008
 
 新建了package的链表类，声明了函数，函数实现功能如下：
-# PackageList 类功能摘要
+# PackageList 类功能概述(第二版)
 
-## 1. 类概述
-`PackageList` 类用于管理 `Package` 对象集合，基于 `std::list<Package>` 容器实现，支持包裹的增删查改、排序及展示等核心操作，适配更细致的查询与删除需求。
-
-
-## 2. 核心功能分类
-
-### 2.1 包裹增减操作
-- `pushPackage(const Package& package)`：添加包裹到列表
-- `pop_backPackage()`：移除列表末尾包裹
-- `pop_frontPackage()`：移除列表开头包裹
-- `removePackageByTrackingNumber(const std::string& trackingNumber)`：按追踪号移除指定包裹
-- `removePackageByPickUpCode(const std::string& pickupCode)`：按取件码移除指定包裹
+PackageList 类用于管理包裹（Package）列表，基于 `std::list<Package>` 存储结构，提供包裹的添加、删除、查找、排序、显示及编辑等功能，适用于快递管理相关场景。
 
 
-### 2.2 包裹查询功能
-- `FindByPickUpCode(const std::string& pickupCode)`：通过取件码查找包裹（返回 `Package*`）
-- `FindByTrackingNumber(const std::string& trackingNumber)`：通过追踪号查找包裹（返回 `Package*`）
-- `FindByMember(const Member& member, bool SenderOrReceiver, int index)`：按会员信息查找（寄件人/收件人，匹配姓名/电话/地址）
-- `FindByMemberName(const std::string& name, bool SenderOrReceiver)`：按寄件人/收件人姓名查找包裹（返回 `Package*`）
-- `FindByMemberPhone(const std::string& phone, bool SenderOrReceiver)`：按寄件人/收件人电话查找包裹（返回 `Package*`）
-- `FindByDate(const std::string& date)`：通过日期查找包裹（返回 `Package*`）
-- `FindByStatus(const std::string& status)`：通过状态查找包裹（返回 `Package*`）
+## 核心功能模块
+
+### 1. 包裹添加与删除
+- `pushPackage()`：通过用户输入依次采集收件人、寄件人信息及包裹详情（追踪号、重量等），创建包裹并添加到列表。
+- `pop_backPackage()`：移除列表末尾的包裹。
+- `pop_frontPackage()`：移除列表开头的包裹。
+- `removePackageByTrackingNumber(const std::string& trackingNumber)`：通过追踪号查找并移除包裹。
+- `removePackageByPickUpCode(const std::string& pickupCode)`：通过取件码查找并移除包裹。
 
 
-### 2.3 排序与展示
-- `SortByStatus()`：按包裹状态排序
-- `DisplayAllPackages() const`：展示所有包裹信息
+### 2. 包裹查找
+- `FindByPickUpCode(const std::string& pickupCode)`：根据取件码查找包裹，返回指针（未找到返回`nullptr`）。
+- `FindByTrackingNumber(const std::string& trackingNumber)`：根据追踪号查找包裹，返回指针。
+- `FindByMember(const Member& member, bool SenderOrReceiver, int index)`：根据寄件人/收件人信息查找（`SenderOrReceiver`区分寄件人/收件人；`index`指定匹配字段：1-姓名、2-电话、3-地址）。
+- `FindByDate(const std::string& date)`：根据入库日期查找包裹，返回指针。
 
 
-### 2.4 包裹信息编辑
-- `EditPackageStatus(const std::string& trackingNumber, const std::string& newStatus)`：按追踪号修改状态
-- `EditPackageNote(const std::string& trackingNumber, const std::string& newNote)`：按追踪号修改备注
+### 3. 排序功能
+- `SortByStatus()`：按包裹状态对列表进行排序（基于状态字符串的字典序）。
 
 
-## 3. 底层存储
-- 私有成员 `std::list<Package> packages`：存储所有包裹对象，适合频繁增删场景
+### 4. 显示功能
+- `DisplayPackageDetails(const Package& package) const`：显示单个包裹的详细信息（包括追踪号、收发件人信息、重量、状态等）。
+- `DisplayAllPackages() const`：遍历列表，显示所有包裹的详细信息，包裹间用分隔线区分。
+
+
+### 5. 编辑功能
+- `EditPackageStatus(const std::string& trackingNumber, const std::string& newStatus)`：通过追踪号查找包裹并更新状态。
+- `EditPackageNote(const std::string& trackingNumber, const std::string& newNote)`：通过追踪号查找包裹并更新备注信息。
+
+
+## 存储结构
+内部使用 `std::list<Package> packages` 存储包裹对象，支持高效的插入、删除操作。
