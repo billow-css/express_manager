@@ -8,9 +8,9 @@ class Package {
     public:
         Package() = delete;
         Package(const Member& sender, const Member& receiver, const std::string& trackingNumber,
-                double weight, const std::string& status, const std::string& note="")
+                double weight, const std::string& status, const std::string& note="" , const std::string &deliveryTime)
             : sender(sender), receiver(receiver), trackingNumber(trackingNumber),
-              weight(weight), status(status), note(note) {}
+              weight(weight), status(status), note(note),deliveryTime(deliveryTime) {}
 
         Member getSender() const {
             return sender;
@@ -70,4 +70,5 @@ class Package {
         std::string status;
         std::string pickupCode;
         std::string note;
+        std::string deliveryTime;
 };
