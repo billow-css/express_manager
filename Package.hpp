@@ -15,7 +15,7 @@ enum Status {
 class Package {
     public:
         Package(){
-            status = 4;
+            status = NULL_STATUS;
             price = 0.0;
         };
         Package(const Member& sender, const Member& receiver, const std::string& trackingNumber,

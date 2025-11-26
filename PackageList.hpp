@@ -35,7 +35,7 @@ class PackageList {
         std::list<Package> packages;
 };
 
-void PackageList::pushPackage(int method , Package p) {
+void PackageList::pushPackage(int method , Package p = Package()) {
     if(method == 0) {
         // member setting
         std::string senderName, senderPhone, senderAddress;
