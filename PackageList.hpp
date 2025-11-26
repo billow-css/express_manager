@@ -1,39 +1,74 @@
-#include "PackageList.h"
-#include "Package.h"
+#include "Package.hpp"
+#include <list>
+#include <string>
 #include <algorithm>
 #include <iostream>
 #include <string>
 #include <ctime>
+#pragma once
 
-void PackageList::pushPackage() {
-    // member setting
-    std::string senderName, senderPhone, senderAddress;
-    std::string receiverName, receiverPhone, receiverAddress;
-    std::cout << "在下方输入栏中依次输入：收件人姓名 <空格> 电话 <空格> 地址\n";
-    std::cin >> receiverName >> receiverPhone >> receiverAddress;
-    Member receiver(receiverName, receiverPhone, receiverAddress);
-    std::cout << "在下方输入栏中依次输入：寄件人姓名 <空格> 电话 <空格> 地址\n";
-    std::cin >> senderName >> senderPhone >> senderAddress;
-    Member sender(senderName, senderPhone, senderAddress);
-    // package setting
-    std::string trackingNumber, status, note, deliveryTime;
-    double weight; 
-    std::cout << "请输入或右键粘贴快递单号：";
-    std::cin >> trackingNumber;
-    std::cout << "请输入快递重量(kg)：";
-    std::cin >> weight;
-    status = "已入库";
-    std::time_t now = std::time(nullptr);
-    std::tm tm = *std::localtime(&now);
-    char buf[11];
-    std::strftime(buf, sizeof(buf), "%Y-%m-%d", &tm);
-    deliveryTime = buf;
-    std::cout << "如需添加备注，请在下方输入栏中输入备注内容，若无备注请直接按回车键跳过：";
-    std::cin.ignore(); // 清除前一个输入留下的换行符
-    std::getline(std::cin, note);
-    Package newPackage(sender, receiver, trackingNumber, weight, status, note, deliveryTime);
-    packages.push_back(newPackage);
-    std::cout << "包裹已成功添加到列表中！\n";
+class PackageList {
+    public:
+        PackageList() = default;
+        //Push and pop functions
+        void pushPackage(int method = 0 , Package p = Package());
+        void pop_backPackage();
+        void pop_frontPackage();
+        void removePackageByTrackingNumber(const std::string& trackingNumber);
+        void removePackageByPickUpCode(const std::string& pickupCode);
+        //Find functions
+        Package* FindByPickUpCode(const std::string& pickupCode);
+        Package* FindByTrackingNumber(const std::string& trackingNumber);
+        Package* FindByMember(const std::string& value , bool SenderOrReceiver , int index);
+        Package* FindByDate(const std::string& date);
+        // true for sender, false for receiver & index==1 -> name ; ==2 -> phone ; ==3 -> address
+        //Sort functions
+        void SortByStatus();
+        //Display function
+        void DisplayPackageDetails(const Package& package) const;
+        void DisplayAllPackages() const;
+        //edit functions
+        void EditPackageStatus(const std::string& trackingNumber, const Status& newStatus);
+        void EditPackageNote(const std::string& trackingNumber, const std::string& newNote);
+
+    private:
+        std::list<Package> packages;
+};
+
+void PackageList::pushPackage(int method , Package p) {
+    if(method == 0) {
+        // member setting
+        std::string senderName, senderPhone, senderAddress;
+        std::string receiverName, receiverPhone, receiverAddress;
+        std::cout << "在下方输入栏中依次输入：收件人姓名 <空格> 电话 <空格> 地址\n";
+        std::cin >> receiverName >> receiverPhone >> receiverAddress;
+        Member receiver(receiverName, receiverPhone, receiverAddress);
+        std::cout << "在下方输入栏中依次输入：寄件人姓名 <空格> 电话 <空格> 地址\n";
+        std::cin >> senderName >> senderPhone >> senderAddress;
+        Member sender(senderName, senderPhone, senderAddress);
+        // package setting
+        std::string trackingNumber, status, note, deliveryTime;
+        double weight; 
+        std::cout << "请输入或右键粘贴快递单号：";
+        std::cin >> trackingNumber;
+        std::cout << "请输入快递重量(kg)：";
+        std::cin >> weight;
+        status = "已入库";
+        std::time_t now = std::time(nullptr);
+        std::tm tm = *std::localtime(&now);
+        char buf[11];
+        std::strftime(buf, sizeof(buf), "%Y-%m-%d", &tm);
+        deliveryTime = buf;
+        std::cout << "如需添加备注，请在下方输入栏中输入备注内容，若无备注请直接按回车键跳过：";
+        std::cin.ignore(); // 清除前一个输入留下的换行符
+        std::getline(std::cin, note);
+        Package newPackage(sender, receiver, trackingNumber, weight, note, deliveryTime);
+        packages.push_back(newPackage);
+        std::cout << "包裹已成功添加到列表中！\n";
+    } else if (method == 1) {
+        packages.push_back(p);
+        std::cout << "包裹已成功添加到列表中！\n";
+    }
 }
 
 void PackageList::pop_backPackage() {
@@ -98,26 +133,26 @@ Package* PackageList::FindByTrackingNumber(const std::string& trackingNumber) {
     return nullptr;
 }
 
-Package* PackageList::FindByMember(const Member& member , bool SenderOrReceiver , int index) {
+Package* PackageList::FindByMember(const std::string& value , bool SenderOrReceiver , int index) {
     for(auto& package : packages) {
         if(SenderOrReceiver) { // true for sender
-            if(index == 1 && package.getSender().getName() == member.getName()) {
+            if(index == 1 && package.getSender().getName() == value) {
                 return &package;
             }
-            else if(index == 2 && package.getSender().getPhone() == member.getPhone()) {
+            else if(index == 2 && package.getSender().getPhone() == value) {
                 return &package;
             }
-            else if(index == 3 && package.getSender().getAddress() == member.getAddress()) {
+            else if(index == 3 && package.getSender().getAddress() == value) {
                 return &package;
             }
         } else { // false for receiver
-            if(index == 1 && package.getReceiver().getName() == member.getName()) {
+            if(index == 1 && package.getReceiver().getName() == value) {
                 return &package;
             }
-            else if(index == 2 && package.getReceiver().getPhone() == member.getPhone()) {
+            else if(index == 2 && package.getReceiver().getPhone() == value) {
                 return &package;
             }
-            else if(index == 3 && package.getReceiver().getAddress() == member.getAddress()) {
+            else if(index == 3 && package.getReceiver().getAddress() == value) {
                 return &package;
             }
         }
@@ -178,7 +213,7 @@ void PackageList::DisplayAllPackages() const {
     }
 }
 
-void PackageList::EditPackageStatus(const std::string& trackingNumber, const std::string& newStatus) {
+void PackageList::EditPackageStatus(const std::string& trackingNumber, const Status& newStatus) {
     Package* package = FindByTrackingNumber(trackingNumber);
     if(package) {
         package->editStatus(newStatus);

@@ -3,7 +3,7 @@
 
 class Member{
     public:
-        Member() = delete;
+        Member() = default;
         Member(const std::string& name, const std::string& phone, const std::string& address)
             : name(name), phone(phone), address(address) {}
 

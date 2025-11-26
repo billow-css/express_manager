@@ -1,16 +1,27 @@
-#include "member.h"
+#include "member.hpp"
 #include <string>
 #include <iostream>
 
 #pragma once
 
+enum Status {
+    Applied,
+    InWarehouse,
+    OutForDelivery,
+    Delivered, 
+    NULL_STATUS
+};
+
 class Package {
     public:
-        Package() = delete;
+        Package(){
+            status = 4;
+            price = 0.0;
+        };
         Package(const Member& sender, const Member& receiver, const std::string& trackingNumber,
-                double weight, const std::string& status, const std::string& note="" , const std::string &deliveryTime)
+                double weight,const std::string& note="" , const std::string &deliveryTime)
             : sender(sender), receiver(receiver), trackingNumber(trackingNumber),
-              weight(weight), status(status), note(note),deliveryTime(deliveryTime) {}
+              weight(weight), note(note),deliveryTime(deliveryTime) {}
 
         Member getSender() const {
             return sender;
@@ -32,7 +43,7 @@ class Package {
             return price;
         }
 
-        std::string getStatus() const {
+        Status getStatus() const {
             return status;
         }
 
@@ -48,7 +59,7 @@ class Package {
             return note;
         }
 
-        void editStatus(const std::string& newStatus) {
+        void editStatus(Status newStatus) {
             status = newStatus;
         }
 
@@ -71,7 +82,7 @@ class Package {
         std::string trackingNumber;
         double weight; // in kilograms
         double price;
-        std::string status;
+        Status status;
         std::string pickupCode;
         std::string note;
         std::string deliveryTime;
